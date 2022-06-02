@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Picker3D.Controllers;
 
 namespace Picker3D.CollisionCase
 {
@@ -17,9 +17,13 @@ namespace Picker3D.CollisionCase
         private PropOpenerCollision _propOpenerCollision;
         private BallsCollision _ballCollision;
 
+        public bool canPass;
 
 
-        private WaitForSeconds _shortWaitTime = new WaitForSeconds(1f);
+
+        private WaitForSeconds _shortWaitTime = new(1f);
+        private WaitForSeconds _longWaitTime = new(3f);
+
 
         private void Awake()
         {
@@ -27,16 +31,20 @@ namespace Picker3D.CollisionCase
             _ballCollision = new BallsCollision();
         }
 
-        public IEnumerator CheckpointSequenceCo(Transform transform)
+        private void Update()
         {
-            //_propOpenerCollision.PropCloser(transform.gameObject);
+            Debug.Log(LevelManager.gameState);
+        }
+        public IEnumerator CheckpointSequenceCo()
+        {
             LevelManager.gameState = GameState.CheckPoint;
-            //_ballCollision.PushBallsOnPool();
-            yield return _shortWaitTime;
+            _ballCollision.PushBallsOnPool(PickerCollisionController.instance.ballsMy);
+            yield return _longWaitTime;
             PlatformRiser();
             yield return _shortWaitTime;
             BarrierOpener();
             LevelManager.gameState = GameState.Normal;
+            _ballCollision.RemoveFromListAndDeactivate(PickerCollisionController.instance.ballsMy);
         }
 
         private void BarrierOpener()

@@ -18,8 +18,10 @@ namespace Picker3D.PickerAttachments
 
         private void OnDisable()
         {
-            leftProp.transform.rotation = Quaternion.identity;
-            rightProp.transform.rotation = Quaternion.identity;
+            leftProp.transform.DOKill();
+            rightProp.transform.DOKill();
+            leftProp.transform.rotation = Quaternion.Euler(0,0,0);
+            rightProp.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 }

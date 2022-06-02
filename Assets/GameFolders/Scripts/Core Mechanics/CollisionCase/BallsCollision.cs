@@ -1,45 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using DG.Tweening;
 
 namespace Picker3D.CollisionCase
 {
     public class BallsCollision
     {
-        //public void PushBallsOnPool(List<Transform > ballList)
-        //{
-        //    var ballsRigidbodies = new List<Rigidbody>();
-        //    if (ballList.Count>1)
-        //    {
-        //        for (var i = 0; i < ballList.Count; i++)
-        //        {
-        //            ballsRigidbodies[i] = ballList[i].GetComponent<Rigidbody>();
-        //        }
-        //        foreach (var item in ballsRigidbodies)
-        //        {
-        //            item.AddForce(item.transform.forward * .5f, ForceMode.Impulse);
-        //        }
-        //    }
-        //    Debug.Log(ballList.Count);
-        //}
-
+        public void PushBallsOnPool(List<Transform> balls)
+        {
+            foreach (var item in balls)
+            {
+                item.DOJump(item.transform.forward, 1, 1, .5f);
+            }
+            Debug.Log("fýrlatti");
+        }
 
         //public void AddToList(List<Transform> ballsList)
         //{
         //    for (int i = 0; i < ballsList.Count; i++)
         //    {
-        //        _balls.Add(ballsList[i]);
+        //        balls.Add(ballsList[i]);
         //    }
+        //    Debug.Log(balls.Count + "ballsCount");
         //}
 
-        //public void RemoveFromListAndDeactivate()
-        //{
-        //    foreach (var item in _balls)
-        //    {
-        //        item.gameObject.SetActive(false);
-        //    }
-        //    _balls.Clear();
-        //}
+        public void RemoveFromListAndDeactivate(List<Transform> balls)
+        {
+            foreach (var item in balls)
+            {
+                item.gameObject.SetActive(false);
+            }
+            balls.Clear();
+        }
     }
 }
 

@@ -8,9 +8,10 @@ namespace Picker3D.Controllers
     [RequireComponent(typeof(Collider))]
     public class PickerCollisionController : MonoBehaviour
     {
+        public static PickerCollisionController instance;
         [Header("Components")]
         [SerializeField] GameObject props;
-        [SerializeField] List<Transform> balls;
+        public List<Transform> ballsMy;
 
         #region References
         private BallsCollision _ballCollision;
@@ -20,6 +21,7 @@ namespace Picker3D.Controllers
 
         private void Awake()
         {
+            instance = this;
             SetterFunction();
         }
 
@@ -32,6 +34,7 @@ namespace Picker3D.Controllers
             _ballCollision = new BallsCollision();
         }
 
+        public int BallListCount => ballsMy.Count;
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent<Interactable>(out var interactable))
@@ -40,9 +43,7 @@ namespace Picker3D.Controllers
                 {
                     _checkPointCollision = other.GetComponent<CheckpointCollision>();
                     _propOpenerCollision.PropCloser(props);
-                    //_ballCollision.PushBallsOnPool(balls);
-                    StartCoroutine(_checkPointCollision.CheckpointSequenceCo(transform));
-                    RemoveFromListAndDeactivate();
+                    StartCoroutine(_checkPointCollision.CheckpointSequenceCo());
                 }
                 if (interactable.type == InteractableType.PropOpener)
                 {
@@ -51,8 +52,10 @@ namespace Picker3D.Controllers
                 }
                 if (interactable.type == InteractableType.Ball)
                 {
-                    balls.Add(other.transform);
-                    //_ballCollision.AddToList(other.transform);
+                    Debug.Log("girdi");
+                    //_ballCollision.balls.Add(other.transform);
+                    ballsMy.Add(other.transform);
+                    Debug.Log(ballsMy.Count);
                 }
                 if (interactable.type == InteractableType.SpawnStarter)
                 {
@@ -64,15 +67,6 @@ namespace Picker3D.Controllers
                     levelSetter.PlayerPositionSetter(transform.parent);
                 }
             }
-        }
-
-        public void RemoveFromListAndDeactivate()
-        {
-            foreach (var item in balls)
-            {
-                item.gameObject.SetActive(false);
-            }
-            balls.Clear();
         }
     }
 }
